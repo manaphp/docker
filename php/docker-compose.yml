@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  test:
+    build:
+      context: .
+      dockerfile: php80.dockerfile
+      #args:
+      #- http_proxy=http://192.168.137.1:1087
+    volumes:
+    - ./:/var/www/html
+    - ./etc/php/php.ini:/etc/php/php.ini
+    - ./etc/php/fpm.conf:/etc/php/fpm.conf
+    - ./cron.d:/tmp/cron.d
+    environment:
+    - APP_CRON_ENABLED=1
+      #network_mode: host
+    command: php /var/www/html/index.php
