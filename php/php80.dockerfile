@@ -11,12 +11,12 @@ RUN apt-get update && apt-get install -y software-properties-common\
 ENV PHP_VERESION 8.0
 ENV PHP_API_VERSION 20200930
 
-RUN  apt-get install -y --no-install-recommends php${PHP_VERESION}-dev
+RUN  apt-get install -y --no-install-recommends php${PHP_VERESION}-dev libcurl4-openssl-dev
 
 RUN mkdir -p /tmp/extensions
 
-RUN curl -o swoole.tar.gz https://github.com.cnpmjs.org/swoole/swoole-src/archive/v4.6.7.tar.gz -L\
-    &&tar zxvf swoole.tar.gz\
+COPY swoole-src-4.8.*.tar.gz ./
+RUN tar zxvf swoole-*.tar.gz\
     &&cd swoole-*\
     &&phpize\
     &&./configure\
@@ -24,6 +24,7 @@ RUN curl -o swoole.tar.gz https://github.com.cnpmjs.org/swoole/swoole-src/archiv
         --enable-http2\
         --enable-sockets\
         --enable-mysqlnd\
+        --enable-swoole-curl\
     &&make && make install\
     &&cp /usr/lib/php/${PHP_API_VERSION}/swoole.so /tmp/extensions/swoole.so\
     &&rm swoole* -rf
@@ -123,4 +124,5 @@ ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
 
 COPY --from=builder /tmp/extensions/* /usr/lib/php/${PHP_API_VERSION}/
 
-RUN echo 'extension=swoole.so'>/etc/php/${PHP_VERESION}/mods-available/swoole.ini && phpenmod swoole
+COPY swoole.ini /etc/php/${PHP_VERESION}/mods-available/
+RUN phpenmod swoole
