@@ -20,12 +20,12 @@ EOF
 fi
 
 ###############################################################################################
-if [ ! "$PHPFPM_LISTEN" == '' ]; then
+if [ "$PHPFPM_LISTEN" != '' ]; then
   sed -i "s|^listen =.*|listen = $PHPFPM_LISTEN|" /etc/php/fpm/pool.d/www.conf
 fi
 
 rm -rf /etc/cron.d
-if [ -d /tmp/cron.d ] && [ ! "$APP_CRON_ENABLED" == '0' ]; then
+if [ -d /tmp/cron.d ] && [ "$APP_CRON_ENABLED" != '0' ]; then
   cp -r /tmp/cron.d /etc/cron.d
 
   chmod -R 0644 /etc/cron.d &&chown -R root:root /etc/cron.d
