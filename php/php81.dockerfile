@@ -116,7 +116,8 @@ RUN ln -s /etc/php/${PHP_VERESION}/cli /etc/php/cli && ln -s /etc/php/${PHP_VERE
         && ln -s /etc/php/php.ini /etc/php/cli/conf.d/99-php.ini\
         && ln -s /etc/php/php.ini /etc/php/fpm/conf.d/99-php.ini\
     &&rm -rf /etc/cron.d\
-    &&phpdismod xdebug
+    &&phpdismod xdebug\
+    &&(cd /usr/bin && ln -sf bash sh)
 
 COPY docker-entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/docker-entrypoint.sh
